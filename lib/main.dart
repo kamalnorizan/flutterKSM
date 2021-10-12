@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_project/home.dart';
 import 'package:my_flutter_project/login.dart';
 
+import 'home.dart';
+
 void main() {
-  runApp(Login());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -26,7 +27,11 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      routes: {
+        '/login': (context) => Login(),
+        '/home': (context) => Home(),
+      },
+      home: const Login(),
     );
   }
 }
