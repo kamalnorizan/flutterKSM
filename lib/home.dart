@@ -22,7 +22,7 @@ class Home extends StatelessWidget {
           ),
           body: Center(
             child: Container(
-              color: Colors.blue,
+              color: Colors.indigo,
               width: double.infinity,
               child: Column(
                 children: [
@@ -30,6 +30,7 @@ class Home extends StatelessWidget {
                   Text('Test 2'),
                   Text('Test 3'),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Test 1'),
                       Text('Test 2'),
