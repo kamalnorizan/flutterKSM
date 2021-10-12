@@ -1,0 +1,6 @@
+1) Java 
+https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html
+
+2) Gradle 
+https://gradle.org/releases/ 
+(7.2)
