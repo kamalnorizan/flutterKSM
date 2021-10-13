@@ -28,20 +28,22 @@ class Home extends StatelessWidget {
         body: Center(
           child: Container(
             width: double.infinity,
-            child: Column(
-              children: [
-                ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/Login_Logo.png'),
-                  ),
-                  trailing: Icon(Icons.navigate_next_rounded),
-                  onTap: () {
-                    Navigator.pushNamed(context, '/create');
-                  },
-                  title: Text('Test'),
-                  subtitle: Text('this is a subtitle'),
-                ),
-              ],
+            child: Expanded(
+              child: ListView.builder(
+                  itemCount: 20,
+                  itemBuilder: (BuildContext ctxt, int Index) {
+                    return ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/images/Login_Logo.png'),
+                        ),
+                        trailing: Icon(Icons.navigate_next_rounded),
+                        onTap: () {
+                          Navigator.pushNamed(context, '/create');
+                        },
+                        title: Text('Test'),
+                        subtitle: Text('this is a subtitle'));
+                  }),
             ),
           ),
         ),
