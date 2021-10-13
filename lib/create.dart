@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:intl/intl.dart';
+
+import 'models/todo.dart';
 
 class Create extends StatefulWidget {
   @override
@@ -8,7 +11,9 @@ class Create extends StatefulWidget {
 
 class _CreateState extends State<Create> {
   String? selectedDate;
-
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+  Todo? createTodo;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,11 +28,13 @@ class _CreateState extends State<Create> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               TextField(
+                controller: titleController,
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(), hintText: 'Title'),
               ),
               SizedBox(height: 10),
               TextField(
+                controller: descriptionController,
                 maxLines: 4,
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(), hintText: 'Content'),
@@ -41,7 +48,8 @@ class _CreateState extends State<Create> {
                     showTitleActions: true,
                     onChanged: (date) {
                       setState(() {
-                        this.selectedDate = date.toString();
+                        this.selectedDate =
+                            DateFormat("dd-MM-yyyy").format(date).toString();
                       });
                     },
                   );
@@ -60,7 +68,11 @@ class _CreateState extends State<Create> {
               ),
               SizedBox(height: 10),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  this.createTodo = Todo(4, titleController.text,
+                      descriptionController.text, this.selectedDate.toString());
+                  Navigator.pop(context, this.createTodo);
+                },
                 child: Text('Create Todo List'),
               ),
             ],

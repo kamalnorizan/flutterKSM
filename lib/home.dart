@@ -33,8 +33,13 @@ class _HomeState extends State<Home> {
       title: 'Material App',
       home: Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/create');
+          onPressed: () async {
+            final result =
+                await Navigator.pushNamed(context, '/create') as Todo;
+
+            setState(() {
+              this.todoList.add(result);
+            });
           },
           tooltip: 'Add new task',
           child: Icon(
