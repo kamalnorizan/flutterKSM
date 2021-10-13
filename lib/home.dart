@@ -8,7 +8,9 @@ class Home extends StatelessWidget {
       title: 'Material App',
       home: Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, '/create');
+          },
           tooltip: 'Add new task',
           child: Icon(
             Icons.add,
