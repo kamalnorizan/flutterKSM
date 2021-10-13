@@ -69,7 +69,7 @@ class _HomeState extends State<Home> {
                         Navigator.pushNamed(context, '/create');
                       },
                       title: Text(todoList[Index].title),
-                      subtitle: Text(DateFormat('dd-MM-yyyy')
+                      subtitle: Text(DateFormat('yyyy-MM-dd')
                           .parse(todoList[Index].duedate)
                           .toString()),
                     );
