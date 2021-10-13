@@ -7,40 +7,26 @@ class Home extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Material App',
       home: Scaffold(
-          appBar: AppBar(
-            title: Text('My Home'),
-            actions: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.ac_unit),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: Text('test'),
-              ),
-            ],
-          ),
-          body: Center(
-            child: Container(
-              color: Colors.indigo,
-              width: double.infinity,
-              child: Column(
-                children: [
-                  Text('Test 1'),
-                  Text('Test 2'),
-                  Text('Test 3'),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Test 1'),
-                      Text('Test 2'),
-                      Text('Test 3'),
-                    ],
-                  )
-                ],
-              ),
+        appBar: AppBar(
+          title: Text('My To-do List'),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/login');
+              },
+              icon: Icon(Icons.vpn_key),
             ),
-          )),
+          ],
+        ),
+        body: Center(
+          child: Container(
+            width: double.infinity,
+            child: Column(
+              children: [],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
