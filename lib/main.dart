@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_project/create.dart';
 import 'package:my_flutter_project/login.dart';
 
 import 'home.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => Login(),
         '/home': (context) => Home(),
+        '/create': (context) => Create(),
       },
       home: const Login(),
     );

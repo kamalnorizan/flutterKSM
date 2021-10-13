@@ -7,6 +7,13 @@ class Home extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Material App',
       home: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          tooltip: 'Add new task',
+          child: Icon(
+            Icons.add,
+          ),
+        ),
         appBar: AppBar(
           title: Text('My To-do List'),
           actions: [
@@ -27,6 +34,10 @@ class Home extends StatelessWidget {
                   leading: CircleAvatar(
                     backgroundImage: AssetImage('assets/images/Login_Logo.png'),
                   ),
+                  trailing: Icon(Icons.navigate_next_rounded),
+                  onTap: () {
+                    Navigator.pushNamed(context, '/create');
+                  },
                   title: Text('Test'),
                   subtitle: Text('this is a subtitle'),
                 ),
