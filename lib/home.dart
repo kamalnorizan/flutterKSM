@@ -22,7 +22,15 @@ class Home extends StatelessWidget {
           child: Container(
             width: double.infinity,
             child: Column(
-              children: [],
+              children: [
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: AssetImage('assets/images/Login_Logo.png'),
+                  ),
+                  title: Text('Test'),
+                  subtitle: Text('this is a subtitle'),
+                ),
+              ],
             ),
           ),
         ),
