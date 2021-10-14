@@ -70,8 +70,14 @@ class _HomeState extends State<Home> {
                             AssetImage('assets/images/Login_Logo.png'),
                       ),
                       trailing: Icon(Icons.navigate_next_rounded),
-                      onTap: () {
-                        Navigator.pushNamed(context, '/create');
+                      onTap: () async {
+                        final todo = await Navigator.pushNamed(
+                                context, '/create', arguments: todoList[Index])
+                            as Todo;
+
+                        setState(() {
+                          todoList[Index] = todo;
+                        });
                       },
                       title: Text(todoList[Index].title),
                       subtitle: Text(DateFormat('yyyy-MM-dd')

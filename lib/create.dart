@@ -14,6 +14,29 @@ class _CreateState extends State<Create> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   Todo? createTodo;
+  var btnTitle = 'Create Todo List';
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    RouteSettings settings = ModalRoute.of(context)!.settings;
+
+    if (settings.arguments != null) {
+      this.createTodo = settings.arguments as Todo;
+      this.titleController.text = this.createTodo!.title.toString();
+      this.descriptionController.text = this.createTodo!.content.toString();
+      this.selectedDate = DateFormat('dd-MM-yyyy')
+          .format(DateFormat('yyyy-MM-dd').parse(this.createTodo!.duedate))
+          .toString();
+      this.btnTitle = 'Update Todo Item';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,11 +92,14 @@ class _CreateState extends State<Create> {
               SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () {
+                  var due = DateFormat('yyyy-MM-dd').format(
+                      DateFormat('dd-MM-yyyy')
+                          .parse(this.selectedDate.toString()));
                   this.createTodo = Todo(4, titleController.text,
-                      descriptionController.text, this.selectedDate.toString());
+                      descriptionController.text, due.toString());
                   Navigator.pop(context, this.createTodo);
                 },
-                child: Text('Create Todo List'),
+                child: Text(btnTitle),
               ),
             ],
           ),
