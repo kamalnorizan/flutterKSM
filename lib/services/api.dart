@@ -14,6 +14,16 @@ class CallApi {
     });
   }
 
+  postData(data, url) async {
+    Uri fullUrl = Uri.parse(_url + url);
+    await _getToken();
+    return http.post(fullUrl, body: jsonEncode(data), headers: {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token'
+    });
+  }
+
   getData(url) async {
     Uri fullUrl = Uri.parse(_url + url);
     await _getToken();

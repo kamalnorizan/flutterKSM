@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:my_flutter_project/services/api.dart';
 
 import 'models/todo.dart';
 
@@ -95,8 +98,12 @@ class _CreateState extends State<Create> {
                   var due = DateFormat('yyyy-MM-dd').format(
                       DateFormat('dd-MM-yyyy')
                           .parse(this.selectedDate.toString()));
-                  // this.createTodo = Todo(4, titleController.text,
-                  // descriptionController.text, due.toString());
+                  _storeTodo();
+                  this.createTodo = Todo(
+                      id: 4,
+                      title: titleController.text,
+                      content: descriptionController.text,
+                      dueDate: due.toString());
                   Navigator.pop(context, this.createTodo);
                 },
                 child: Text(btnTitle),
@@ -106,5 +113,17 @@ class _CreateState extends State<Create> {
         )),
       ),
     );
+  }
+
+  storeTodo() async {}
+
+  void _storeTodo() async {
+    var data = {
+      'title': this.titleController.text,
+      'content': this.descriptionController.text,
+      'due_date': this.selectedDate
+    };
+
+    await CallApi().postData(data, 'todolist/store');
   }
 }
