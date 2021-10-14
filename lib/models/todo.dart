@@ -1,34 +1,34 @@
+import 'dart:convert';
+
+List<Todo> fromJson(String str) =>
+    List<Todo>.from(json.decode(str).map((x) => Todo.fromJson(x)));
+
 class Todo {
-  int _id;
-  String _title;
-  String _content;
-  String _duedate;
+  Todo({
+    required this.id,
+    required this.title,
+    required this.content,
+    required this.dueDate,
+  });
 
-  Todo(
-    this._id,
-    this._title,
-    this._content,
-    this._duedate,
-  );
+  late final int id;
+  late final String title;
+  late final String content;
+  late final String dueDate;
 
-  int get id => _id;
-  String get title => _title;
-  String get content => _content;
-  String get duedate => _duedate;
-
-  set id(int newid) {
-    this._id = newid;
+  Todo.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    title = json['title'];
+    content = json['content'];
+    dueDate = json['due_date'];
   }
 
-  set title(String newtitle) {
-    this._title = newtitle;
-  }
-
-  set content(String newcontent) {
-    this._content = newcontent;
-  }
-
-  set duedate(String newduedate) {
-    this._duedate = newduedate;
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['id'] = id;
+    _data['title'] = title;
+    _data['content'] = content;
+    _data['due_date'] = dueDate;
+    return _data;
   }
 }

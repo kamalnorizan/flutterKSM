@@ -31,7 +31,7 @@ class _CreateState extends State<Create> {
       this.titleController.text = this.createTodo!.title.toString();
       this.descriptionController.text = this.createTodo!.content.toString();
       this.selectedDate = DateFormat('dd-MM-yyyy')
-          .format(DateFormat('yyyy-MM-dd').parse(this.createTodo!.duedate))
+          .format(DateFormat('yyyy-MM-dd').parse(this.createTodo!.dueDate))
           .toString();
       this.btnTitle = 'Update Todo Item';
     }
@@ -95,8 +95,8 @@ class _CreateState extends State<Create> {
                   var due = DateFormat('yyyy-MM-dd').format(
                       DateFormat('dd-MM-yyyy')
                           .parse(this.selectedDate.toString()));
-                  this.createTodo = Todo(4, titleController.text,
-                      descriptionController.text, due.toString());
+                  // this.createTodo = Todo(4, titleController.text,
+                  // descriptionController.text, due.toString());
                   Navigator.pop(context, this.createTodo);
                 },
                 child: Text(btnTitle),

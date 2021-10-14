@@ -3,11 +3,25 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:my_flutter_project/services/api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   // const Login({Key? key}) : super(key: key);
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
   TextEditingController emailController = TextEditingController();
+
   TextEditingController passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    this.emailController.text = 'demo@gmail.com';
+    this.passwordController.text = 'zLALJdqq';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +62,7 @@ class Login extends StatelessWidget {
                           // Navigator.pushReplacementNamed(context, '/home');
                           if (emailController.text != '' &&
                               passwordController.text != '') {
-                            _login();
+                            _login(context);
                           } else {
                             print('error');
                           }
@@ -66,7 +80,7 @@ class Login extends StatelessWidget {
     );
   }
 
-  void _login() async {
+  void _login(context) async {
     var data = {
       'email': emailController.text,
       'password': passwordController.text
@@ -74,6 +88,10 @@ class Login extends StatelessWidget {
 
     var res = await CallApi().postDataLogin(data);
     var body = json.decode(res.body);
-    print(body);
+    if (body['success'].length > 0) {
+      SharedPreferences localStorage = await SharedPreferences.getInstance();
+      localStorage.setString('token', body['success']['token']);
+      Navigator.pushReplacementNamed(context, '/home');
+    }
   }
 }

@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:my_flutter_project/models/todo.dart';
 import 'package:intl/intl.dart';
+import 'package:my_flutter_project/services/api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -8,23 +12,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<Todo> todoList = [
-    Todo(
-        1,
-        "My First Todo List",
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-        "2021-10-14"),
-    Todo(
-        2,
-        "My Second Todo List",
-        "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old..",
-        "2021-10-15"),
-    Todo(
-        3,
-        "My Third Todo List",
-        "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words",
-        "2021-10-15")
-  ];
+  List<Todo>? todoList;
+  String? token;
+  @override
+  void initState() {
+    super.initState();
+    loadTodoList();
+    getToken();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +33,7 @@ class _HomeState extends State<Home> {
                 await Navigator.pushNamed(context, '/create') as Todo;
 
             setState(() {
-              this.todoList.add(result);
+              this.todoList!.add(result);
             });
           },
           tooltip: 'Add new task',
@@ -55,6 +50,12 @@ class _HomeState extends State<Home> {
               },
               icon: Icon(Icons.vpn_key),
             ),
+            IconButton(
+              onPressed: () {
+                loadTodoList();
+              },
+              icon: Icon(Icons.refresh),
+            ),
           ],
         ),
         body: Center(
@@ -62,7 +63,7 @@ class _HomeState extends State<Home> {
             width: double.infinity,
             child: Expanded(
               child: ListView.builder(
-                  itemCount: todoList.length,
+                  itemCount: todoList?.length != null ? todoList!.length : 0,
                   itemBuilder: (BuildContext ctxt, int Index) {
                     return ListTile(
                       leading: CircleAvatar(
@@ -72,16 +73,16 @@ class _HomeState extends State<Home> {
                       trailing: Icon(Icons.navigate_next_rounded),
                       onTap: () async {
                         final todo = await Navigator.pushNamed(
-                                context, '/create', arguments: todoList[Index])
+                                context, '/create', arguments: todoList![Index])
                             as Todo;
 
                         setState(() {
-                          todoList[Index] = todo;
+                          todoList![Index] = todo;
                         });
                       },
-                      title: Text(todoList[Index].title),
+                      title: Text(todoList![Index].title),
                       subtitle: Text(DateFormat('yyyy-MM-dd')
-                          .parse(todoList[Index].duedate)
+                          .parse(todoList![Index].dueDate)
                           .toString()),
                     );
                   }),
@@ -90,5 +91,22 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  getToken() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+
+    this.token = localStorage.getString('token');
+  }
+
+  loadTodoList() async {
+    var res = await CallApi().getData('todolist');
+    var body = json.decode(res.body);
+    // print(body['success']['todolist']);
+    var result = body['success']['todolist'];
+    print(result);
+    setState(() {
+      this.todoList = fromJson(json.encode(result));
+    });
   }
 }
