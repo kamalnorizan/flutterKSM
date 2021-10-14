@@ -115,9 +115,7 @@ class _CreateState extends State<Create> {
     );
   }
 
-  storeTodo() async {}
-
-  void _storeTodo() async {
+  _storeTodo() async {
     var data = {
       'title': this.titleController.text,
       'content': this.descriptionController.text,
