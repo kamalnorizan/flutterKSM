@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
@@ -44,6 +42,7 @@ class _CreateState extends State<Create> {
 
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
     return Scaffold(
       appBar: AppBar(
         title: Text('Item'),
@@ -52,69 +51,97 @@ class _CreateState extends State<Create> {
         child: Center(
             child: Padding(
           padding: const EdgeInsets.fromLTRB(10, 25, 10, 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), hintText: 'Title'),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: descriptionController,
-                maxLines: 4,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), hintText: 'Content'),
-              ),
-              SizedBox(height: 10),
-              TextButton(
-                onPressed: () {
-                  DatePicker.showDatePicker(
-                    context,
-                    minTime: DateTime(2021, 10, 13),
-                    showTitleActions: true,
-                    onChanged: (date) {
-                      setState(() {
-                        this.selectedDate =
-                            DateFormat("dd-MM-yyyy").format(date).toString();
-                      });
-                    },
-                  );
-                },
-                child: Column(
-                  children: [
-                    Text(
-                      this.selectedDate.toString(),
-                      style: TextStyle(
-                        fontSize: 25,
-                      ),
-                    ),
-                    Text('Select Due Date'),
-                  ],
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                TextFormField(
+                  controller: titleController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Title',
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please Enter value here";
+                    } else {
+                      return null;
+                    }
+                  },
                 ),
-              ),
-              SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  var due = DateFormat('yyyy-MM-dd').format(
-                      DateFormat('dd-MM-yyyy')
-                          .parse(this.selectedDate.toString()));
-                  if (this.createTodo != null) {
-                    _updateTodo();
-                  } else {
-                    _storeTodo();
-                  }
-                  this.createTodo = Todo(
-                      id: 4,
-                      title: titleController.text,
-                      content: descriptionController.text,
-                      dueDate: due.toString());
-                  Navigator.pop(context, this.createTodo);
-                },
-                child: Text(btnTitle),
-              ),
-            ],
+                SizedBox(height: 10),
+                TextFormField(
+                  controller: descriptionController,
+                  maxLines: 4,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Content',
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please Enter value here";
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+                SizedBox(height: 10),
+                TextButton(
+                  onPressed: () {
+                    DatePicker.showDatePicker(
+                      context,
+                      minTime: DateTime(2021, 10, 13),
+                      showTitleActions: true,
+                      onChanged: (date) {
+                        setState(() {
+                          this.selectedDate =
+                              DateFormat("dd-MM-yyyy").format(date).toString();
+                        });
+                      },
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      Text(
+                        this.selectedDate.toString(),
+                        style: TextStyle(
+                          fontSize: 25,
+                        ),
+                      ),
+                      Text('Select Due Date'),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    print(this.selectedDate != null);
+
+                    if (formKey.currentState!.validate() &&
+                        this.selectedDate != null) {
+                      var due = DateFormat('yyyy-MM-dd').format(
+                          DateFormat('dd-MM-yyyy')
+                              .parse(this.selectedDate.toString()));
+                      if (this.createTodo != null) {
+                        _updateTodo();
+                      } else {
+                        _storeTodo();
+                      }
+                      this.createTodo = Todo(
+                          id: 4,
+                          title: titleController.text,
+                          content: descriptionController.text,
+                          dueDate: due.toString());
+                      Navigator.pop(context, this.createTodo);
+                    } else {
+                      _showDialog(context);
+                    }
+                  },
+                  child: Text(btnTitle),
+                ),
+              ],
+            ),
           ),
         )),
       ),
@@ -145,5 +172,26 @@ class _CreateState extends State<Create> {
 
     await CallApi()
         .postData(data, 'todolist/update/' + this.createTodo!.id.toString());
+  }
+
+  _showDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Expanded(
+            child: AlertDialog(
+              title: Text('Error'),
+              content: Text('Sila penuhkan tempat kosong'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Ok'),
+                )
+              ],
+            ),
+          );
+        });
   }
 }

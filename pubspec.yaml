@@ -38,6 +38,7 @@ dependencies:
     git: https://github.com/Realank/flutter_datetime_picker.git
   http:
   shared_preferences: ^2.0.7
+  flutter_slidable: ^0.6.0
 
 
 dev_dependencies:

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:my_flutter_project/models/todo.dart';
 import 'package:intl/intl.dart';
 import 'package:my_flutter_project/services/api.dart';
@@ -65,25 +66,36 @@ class _HomeState extends State<Home> {
               child: ListView.builder(
                   itemCount: todoList?.length != null ? todoList!.length : 0,
                   itemBuilder: (BuildContext ctxt, int Index) {
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage:
-                            AssetImage('assets/images/Login_Logo.png'),
-                      ),
-                      trailing: Icon(Icons.navigate_next_rounded),
-                      onTap: () async {
-                        final todo = await Navigator.pushNamed(
-                                context, '/create', arguments: todoList![Index])
-                            as Todo;
+                    return Slidable(
+                      actionPane: SlidableDrawerActionPane(),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/images/Login_Logo.png'),
+                        ),
+                        trailing: Icon(Icons.navigate_next_rounded),
+                        onTap: () async {
+                          final todo = await Navigator.pushNamed(
+                              context, '/create',
+                              arguments: todoList![Index]) as Todo;
 
-                        setState(() {
-                          todoList![Index] = todo;
-                        });
-                      },
-                      title: Text(todoList![Index].title),
-                      subtitle: Text(DateFormat('yyyy-MM-dd')
-                          .parse(todoList![Index].dueDate)
-                          .toString()),
+                          setState(() {
+                            todoList![Index] = todo;
+                          });
+                        },
+                        title: Text(todoList![Index].title),
+                        subtitle: Text(DateFormat('yyyy-MM-dd')
+                            .parse(todoList![Index].dueDate)
+                            .toString()),
+                      ),
+                      secondaryActions: [
+                        IconSlideAction(
+                          caption: 'Delete',
+                          color: Colors.redAccent[700],
+                          icon: Icons.delete,
+                          onTap: () {},
+                        )
+                      ],
                     );
                   }),
             ),
