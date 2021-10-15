@@ -119,11 +119,11 @@ class _CreateState extends State<Create> {
     var data = {
       'title': this.titleController.text,
       'content': this.descriptionController.text,
-      'due_date': DateFormat('dd-MM-yyyy')
-          .format(DateFormat('yyyy-MM-dd').parse(this.selectedDate.toString()))
+      'due_date': DateFormat('yyyy-MM-dd')
+          .format(DateFormat('dd-MM-yyyy').parse(this.selectedDate.toString()))
           .toString()
     };
-
+    print(data);
     await CallApi().postData(data, 'todolist/store');
   }
 }
