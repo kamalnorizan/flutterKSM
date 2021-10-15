@@ -15,6 +15,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<Todo>? todoList;
   String? token;
+  int _loading = 1;
   @override
   void initState() {
     super.initState();
@@ -62,43 +63,48 @@ class _HomeState extends State<Home> {
         body: Center(
           child: Container(
             width: double.infinity,
-            child: Expanded(
-              child: ListView.builder(
-                  itemCount: todoList?.length != null ? todoList!.length : 0,
-                  itemBuilder: (BuildContext ctxt, int Index) {
-                    return Slidable(
-                      actionPane: SlidableDrawerActionPane(),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage:
-                              AssetImage('assets/images/Login_Logo.png'),
-                        ),
-                        trailing: Icon(Icons.navigate_next_rounded),
-                        onTap: () async {
-                          final todo = await Navigator.pushNamed(
-                              context, '/create',
-                              arguments: todoList![Index]) as Todo;
+            child: _loading == 1
+                ? CircularProgressIndicator()
+                : Expanded(
+                    child: ListView.builder(
+                        itemCount:
+                            todoList?.length != null ? todoList!.length : 0,
+                        itemBuilder: (BuildContext ctxt, int Index) {
+                          return Slidable(
+                            actionPane: SlidableDrawerActionPane(),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage:
+                                    AssetImage('assets/images/Login_Logo.png'),
+                              ),
+                              trailing: Icon(Icons.navigate_next_rounded),
+                              onTap: () async {
+                                final todo = await Navigator.pushNamed(
+                                    context, '/create',
+                                    arguments: todoList![Index]) as Todo;
 
-                          setState(() {
-                            todoList![Index] = todo;
-                          });
-                        },
-                        title: Text(todoList![Index].title),
-                        subtitle: Text(DateFormat('yyyy-MM-dd')
-                            .parse(todoList![Index].dueDate)
-                            .toString()),
-                      ),
-                      secondaryActions: [
-                        IconSlideAction(
-                          caption: 'Delete',
-                          color: Colors.redAccent[700],
-                          icon: Icons.delete,
-                          onTap: () {},
-                        )
-                      ],
-                    );
-                  }),
-            ),
+                                setState(() {
+                                  todoList![Index] = todo;
+                                });
+                              },
+                              title: Text(todoList![Index].title),
+                              subtitle: Text(DateFormat('yyyy-MM-dd')
+                                  .parse(todoList![Index].dueDate)
+                                  .toString()),
+                            ),
+                            secondaryActions: [
+                              IconSlideAction(
+                                caption: 'Delete',
+                                color: Colors.redAccent[700],
+                                icon: Icons.delete,
+                                onTap: () {
+                                  _showDialog(context, todoList![Index].id);
+                                },
+                              )
+                            ],
+                          );
+                        }),
+                  ),
           ),
         ),
       ),
@@ -120,5 +126,43 @@ class _HomeState extends State<Home> {
     setState(() {
       this.todoList = fromJson(json.encode(result));
     });
+  }
+
+  _showDialog(BuildContext context, id) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Expanded(
+            child: AlertDialog(
+              title: Text('Alert'),
+              content: Text('Adakah anda pasti untuk memadam item ini?'),
+              actions: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: Colors.red),
+                  onPressed: () async {
+                    var data = {};
+
+                    await CallApi()
+                        .postData(data, 'todolist/delete/' + id.toString());
+                    loadTodoList();
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'Ya',
+                    style: TextStyle(
+                      backgroundColor: Colors.redAccent,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Tidak'),
+                ),
+              ],
+            ),
+          );
+        });
   }
 }
