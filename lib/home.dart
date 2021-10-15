@@ -118,6 +118,7 @@ class _HomeState extends State<Home> {
   }
 
   loadTodoList() async {
+    _loading = 1;
     var res = await CallApi().getData('todolist');
     var body = json.decode(res.body);
     // print(body['success']['todolist']);
@@ -125,6 +126,7 @@ class _HomeState extends State<Home> {
     print(result);
     setState(() {
       this.todoList = fromJson(json.encode(result));
+      _loading = 0;
     });
   }
 
