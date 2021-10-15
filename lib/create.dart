@@ -119,7 +119,9 @@ class _CreateState extends State<Create> {
     var data = {
       'title': this.titleController.text,
       'content': this.descriptionController.text,
-      'due_date': this.selectedDate
+      'due_date': DateFormat('dd-MM-yyyy')
+          .format(DateFormat('yyyy-MM-dd').parse(this.selectedDate.toString()))
+          .toString()
     };
 
     await CallApi().postData(data, 'todolist/store');
