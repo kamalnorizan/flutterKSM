@@ -18,6 +18,7 @@ class _CreateState extends State<Create> {
   final descriptionController = TextEditingController();
   Todo? createTodo;
   var btnTitle = 'Create Todo List';
+  var todo_id;
 
   @override
   void initState() {
@@ -31,6 +32,7 @@ class _CreateState extends State<Create> {
 
     if (settings.arguments != null) {
       this.createTodo = settings.arguments as Todo;
+      this.todo_id = this.createTodo!.id.toString();
       this.titleController.text = this.createTodo!.title.toString();
       this.descriptionController.text = this.createTodo!.content.toString();
       this.selectedDate = DateFormat('dd-MM-yyyy')
@@ -98,7 +100,11 @@ class _CreateState extends State<Create> {
                   var due = DateFormat('yyyy-MM-dd').format(
                       DateFormat('dd-MM-yyyy')
                           .parse(this.selectedDate.toString()));
-                  _storeTodo();
+                  if (this.createTodo != null) {
+                    _updateTodo();
+                  } else {
+                    _storeTodo();
+                  }
                   this.createTodo = Todo(
                       id: 4,
                       title: titleController.text,
@@ -123,7 +129,21 @@ class _CreateState extends State<Create> {
           .format(DateFormat('dd-MM-yyyy').parse(this.selectedDate.toString()))
           .toString()
     };
-    print(data);
+
     await CallApi().postData(data, 'todolist/store');
+  }
+
+  _updateTodo() async {
+    var data = {
+      'id': this.todo_id,
+      'title': this.titleController.text,
+      'content': this.descriptionController.text,
+      'due_date': DateFormat('yyyy-MM-dd')
+          .format(DateFormat('dd-MM-yyyy').parse(this.selectedDate.toString()))
+          .toString()
+    };
+
+    await CallApi()
+        .postData(data, 'todolist/update/' + this.createTodo!.id.toString());
   }
 }
